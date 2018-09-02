@@ -1,0 +1,64 @@
+---
+title: "Basic"
+author: "EE Holmes"
+date: "9/2/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. 
+
+Reference sheets:
+
+* In RStudio, click 'Help' menu and then 'Markdown Quick Reference'
+* https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf
+
+## Knit
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
+
+## Adding code
+
+You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Hiding code
+
+Sometimes you want to compute something and only show the finished calculation in your report.
+
+
+```{r dontshow, echo=FALSE}
+x <- mtcars$mpg
+y <- mtcars$wt
+y2 <- y^2
+```
+
+The values are stored and now I can reference them later.
+
+```{r plot2}
+plot(x, y2)
+```
+
+## Troubleshooting
+
+The bit after `r` is a label.  You can leave it blank but if you include, you cannot duplicate labels in your report.
+
+Line feeds are important.  If you are having trouble, make sure you have line feeds before and after headers and code.
