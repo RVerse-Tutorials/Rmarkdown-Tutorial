@@ -1,0 +1,54 @@
+---
+title: "Tables"
+author: "EE Holmes"
+date: "9/5/2018"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+always_allow_html: yes
+---
+
+You can create nice html tables with R Markdown and they even look ok in Word.   The main function I will show here is `kable()` with the kableExtra extensions.  Read more on kableExtra [here](http://haozhu233.github.io/kableExtra/) and see many more examples.
+
+```{r setup, warning=FALSE}
+library(knitr)
+dt <- mtcars[1:5, 1:6]
+```
+
+Then you can make a basic table that looks ok in html, Word or PDF:
+
+```{r}
+kable(dt, align="lcccccc")
+```
+
+If you would like fancy html tables, try the kableExtra package:
+
+```{r setup2, warning=FALSE}
+library(kableExtra)
+```
+
+This will make a nice table if you knit to html but will not work in Word.
+
+```{r}
+kable_styling(kable(dt, align = "lcccccc", booktabs = TRUE))
+```
+
+You can easily create some nice effects for your tables in html documents like tables that float to the side.  
+
+```{r fancy}
+tab <- kable(dt, booktabs = TRUE)
+kable_styling(tab, bootstrap_options = "striped", full_width = FALSE, position = "float_right")
+```
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet mauris in ex ultricies elementum vel rutrum dolor. Phasellus tempor convallis dui, in hendrerit mauris placerat scelerisque. Maecenas a accumsan enim, a maximus velit. Pellentesque in risus eget est faucibus convallis nec at nulla. Phasellus nec lacinia justo. Morbi fermentum, orci id varius accumsan, nibh neque porttitor ipsum, consectetur luctus risus arcu ac ex. Aenean a luctus augue. Suspendisse et auctor nisl. Suspendisse cursus ultrices quam non vulputate. Phasellus et pharetra neque, vel feugiat erat. Sed feugiat elit at mauris commodo consequat. Sed congue lectus id mattis hendrerit. Mauris turpis nisl, congue eget velit sed, imperdiet convallis magna. Nam accumsan urna risus, non feugiat odio vehicula eget.
+
+
+You can also make tables in raw markdown but you are limited in what you can achieve.  Read more about markdown table syntax [here](https://www.markdownguide.org/extended-syntax#tables).
+
+| Tables   |      Are      |  Cool |
+|----------|:-------------:|------:|
+| col 1 is |  left-aligned | $1600 |
+| col 2 is |    centered   |   $12 |
+| col 3 is | right-aligned |    $1 |
+

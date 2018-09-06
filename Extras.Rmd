@@ -1,0 +1,77 @@
+---
+title: "Extras"
+author: "EE Holmes"
+date: "9/5/2018"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+## Knit
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this.
+
+### This won't be in table of contents
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Code folding
+
+Sometimes you have a long bit of code that you would like users to be able to see if they want, but you don't want it cluttering up your document.
+
+Add `code_folding: hide` or `code_folding: show` to your yaml to add a button that the user can click to show or hide the code.
+
+```
+---
+title: "Extras"
+output:
+  html_document:
+    code_folding: hide
+---
+```
+
+```{r fig.stationarity2, fig.height = 4, fig.width = 8, fig.align = "center", warning=FALSE, message=FALSE, fig.cap="test"}
+require(ggplot2)
+require(reshape2)
+require(gridExtra)
+TT <- 100
+theta <- 0.8
+nsim <- 10
+ar1 <- as.vector(arima.sim(TT, model=list(ar=theta)))
+dat <- data.frame(t=1:TT, y=ar1)
+p1 <- ggplot(dat, aes(x=t, y=y)) + geom_line() + 
+  ggtitle("AR-1") + xlab("") + ylab("value")
+ys <- matrix(0,TT,nsim)
+for(i in 1:nsim) ys[,i]=as.vector(arima.sim(TT, model=list(ar=theta)))
+ys <- data.frame(ys)
+ys$id <- 1:TT
+
+ys2 <- melt(ys, id.var="id")
+p2 <- ggplot(ys2, aes(x=id,y=value,group=variable)) +
+  geom_line() + xlab("") + ylab("value") +
+  ggtitle("The variance of an AR-1 process is steady")
+grid.arrange(p1, p2, ncol = 1)
+```

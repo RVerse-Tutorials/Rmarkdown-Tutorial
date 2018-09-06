@@ -1,0 +1,196 @@
+---
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+---
+
+
+```{r setup, include=FALSE, message=FALSE}
+options(htmltools.dir.version = FALSE, servr.daemon = TRUE)
+```
+
+class: center, middle, inverse
+# Forecasting Time Series
+## Time-varying Regression
+
+.futnote[Eli Holmes, NOAA Fisheries]
+
+.citation[eli.holmes@noaa.gov]
+
+---
+
+```{r load_data, echo=FALSE}
+load("landings.RData")
+landings$log.metric.tons = log(landings$metric.tons)
+landings = subset(landings, Year <= 1989)
+```
+
+
+## Time-varying regression
+
+Time-varying regression is simply a linear regression where time is the explanatory variable:
+
+$$log(catch) = \alpha + \beta t + \beta_2 t^2 + \dots + e_t$$
+The error term ( $e_t$ ) was treated as an independent Normal error ( $\sim N(0, \sigma)$ ) in Stergiou and Christou (1996).  If that is not a reasonable assumption, then it is simple to fit an autocorrelated error model or non-Gausian error model in R.
+
+---
+
+Stergiou and Christou (1996) fit time-varying regressions to the 1964-1987 data and show the results in Table 4.
+
+
+
+---
+
+The first step is to determine how many polynomials of $t$ to include in your model.
+
+```{r poly.plot, echo=FALSE,fig.height=4,fig.width=8,fig.align="center"}
+par(mfrow=c(1,4))
+tt=seq(-5,5,.01)
+plot(tt,type="l",ylab="",xlab="")
+title("1st order")
+plot(tt^2,type="l",ylab="",xlab="")
+title("2nd order")
+plot(tt^3-3*tt^2-tt+3,ylim=c(-100,50),type="l",ylab="",xlab="")
+title("3rd order")
+plot(tt^4+2*tt^3-12*tt^2-2*tt+6,ylim=c(-100,100),type="l",ylab="",xlab="")
+title("4th order")
+```
+
+---
+
+Here is how to fit a linear regression to the anchovy landings with a 4th-order polynomial for time.  We are fitting this model:
+
+$$log(Anchovy) = \alpha + \beta t + \beta_2 t^2 + \beta_3 t^3 + \beta_4 t^4 + e_t$$
+
+```{r tvreg.anchovy}
+landings$t = landings$Year-1963
+model <- lm(log.metric.tons ~ poly(t,4), 
+            data=landings, subset=Species=="Anchovy"&Year<=1987)
+```
+
+---
+
+They do not say how they choose the polynomial order to include.  We will look at the fit and keep the significant polynomials.
+
+```{r}
+summary(model)
+```
+
+---
+
+This suggests that we keep only the 1st polynomial, i.e. a linear relationship with time.
+
+```{r tvreg.anchovy2}
+dat = subset(landings, Species=="Anchovy" & Year <= 1987)
+model <- lm(log.metric.tons ~ t, data=dat)
+```
+
+The coefficients and adjusted R2 are similar to that shown in Table 4.
+
+```{r}
+c(coef(model), summary(model)$adj.r.squared)
+```
+
+---
+
+We want to test if our residuals are independent.  We can do this with the Ljung-Box test as Stergio and Christou (1995) do.  Stergio and Christou appear to use a lag of 14 for the test (this is a bit large for 24 data points).  The degrees of freedom is lag minus the number of estimated parameters in the model.  So for the Anchovy data, $df = 14 - 2$.
+
+```{r}
+x <- resid(model)
+Box.test(x, lag = 14, type = "Ljung-Box",fitdf=2)
+```
+Compare to the values in the far right column in Table 4.
+
+---
+
+For the sardine (bottom row in Table 4), Stergio and Christou fit a 4th order polynomial.  There are two approaches you can take to fitting n-order polynomials.  The first is to use the `poly()` function.  This creates orthogonal covariates for your polynomial.
+
+What does that mean? Let's say you want to fit a model with a 2nd order polynomial of $t$.  It has $t$ and $t^2$, but using these are highly correlated.  They also have different means and different variances, which makes it hard to compare the estimated effect sizes.  The `poly()` function creates covariates with mean and covariance or zero and identical variances.
+
+```{r poly}
+T1 = 1:24; T2=T1^2
+c(mean(T1),mean(T2),cov(T1, T2))
+T1 = poly(T1,2)[,1]; T2=poly(T1,2)[,2]
+c(mean(T1),mean(T2),cov(T1, T2))
+```
+
+---
+
+With `poly()`, a 4th order time-varying regression model is fit to the sardine data as:
+
+```{r tvreg.sardine}
+dat = subset(landings, Species=="Sardine" & Year <= 1987)
+model <- lm(log.metric.tons ~ poly(t,4), data=dat)
+```
+
+This indicates support for the 2nd, 3rd, and 4th orders but not the 1st (linear) part.
+
+---
+
+```{r poly.summary}
+summary(model)
+```
+---
+
+However, Stergiou and Christou used a raw polynomial model using $t$, $t^2$, $t^3$ and $t^4$ as the covariates.  We can fit this model as:
+
+```{r tvreg.sardine2}
+dat = subset(landings, Species=="Sardine" & Year <= 1987)
+model <- lm(log.metric.tons ~ t + I(t^2) + I(t^3) + I(t^4), data=dat)
+```
+
+The coefficients and adjusted R2 are similar to that shown in Table 4.
+
+```{r}
+c(coef(model), summary(model)$adj.r.squared)
+```
+
+---
+
+The test for autocorrelation of the residuals is 
+
+```{r}
+x <- resid(model)
+Box.test(x, lag = 14, type = "Ljung-Box",fitdf=5)
+```
+
+`fitdf` specifies the number of parameters estimated by the model.  In this case it is 5, intercept and 4 coefficients.
+
+The p-value is less than 0.05 indicating lack of autocorrelation in the residuals.
+
+---
+
+class: center, middle, inverse
+# Summary
+
+---
+
+## Why use time-varying regression?
+
+* It looks there is a simple time relationship.  If a high-order polynomial is required, that is a bad sign.
+
+* Easy and fast
+
+* Easy to explain
+
+* You are only forecasting a few years ahead
+
+* No assumptions required about 'stationarity'
+
+---
+
+## Why not to use time-varying regression?
+
+* Autocorrelation is not modeled.  That autocorrelation may hold information for forecasting.
+
+* You are only using temporal trend for forecasting (mean level).
+
+* If you use a high-order polynomial, you might be modeling noise from a random walk.  That means interpreting the temporal pattern as having information when in fact it has none.
+
+## Is time-varying regression used?
+
+All the time.  Most "trend" analyses are a variant of time-varying regression.  If you fit a line to your data and report the trend or percent change, that's a time-varying regression.
+

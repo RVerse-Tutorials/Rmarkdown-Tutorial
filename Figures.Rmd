@@ -1,0 +1,70 @@
+---
+title: "Figures"
+author: "EE Holmes"
+date: "9/5/2018"
+output:
+  html_document:
+    fig_caption: yes
+---
+
+
+
+```{r load_data, echo=FALSE}
+load("landings.RData")
+landings$log.metric.tons = log(landings$metric.tons)
+landings = subset(landings, Year <= 1989)
+```
+
+
+
+```{r poly.plot, fig.height=4, fig.width=8, fig.align="center"}
+par(mfrow=c(1,4))
+tt <- seq(-5,5,.01)
+plot(tt,type="l",ylab="",xlab="")
+title("1st order")
+plot(tt^2,type="l",ylab="",xlab="")
+title("2nd order")
+plot(tt^3-3*tt^2-tt+3,ylim=c(-100,50),type="l",ylab="",xlab="")
+title("3rd order")
+plot(tt^4+2*tt^3-12*tt^2-2*tt+6,ylim=c(-100,100),type="l",ylab="",xlab="")
+title("4th order")
+```
+
+Specify `echo=FALSE` to hide the figure code.  Set `message=FALSE` and `warning=FALSE` to suppress package loading messages.
+
+```{r fig.stationarity2, fig.height = 4, fig.width = 8, fig.align = "center", echo=FALSE, warning=FALSE, message=FALSE, fig.cap="test"}
+require(ggplot2)
+require(reshape2)
+require(gridExtra)
+TT <- 100
+theta <- 0.8
+nsim <- 10
+ar1 <- as.vector(arima.sim(TT, model=list(ar=theta)))
+dat <- data.frame(t=1:TT, y=ar1)
+p1 <- ggplot(dat, aes(x=t, y=y)) + geom_line() + 
+  ggtitle("AR-1") + xlab("") + ylab("value")
+ys <- matrix(0,TT,nsim)
+for(i in 1:nsim) ys[,i]=as.vector(arima.sim(TT, model=list(ar=theta)))
+ys <- data.frame(ys)
+ys$id <- 1:TT
+
+ys2 <- melt(ys, id.var="id")
+p2 <- ggplot(ys2, aes(x=id,y=value,group=variable)) +
+  geom_line() + xlab("") + ylab("value") +
+  ggtitle("The variance of an AR-1 process is steady")
+grid.arrange(p1, p2, ncol = 1)
+```
+
+You can include figure legends if your yaml has
+```
+output:
+  html_document:
+    fig_caption: yes
+
+```
+
+```{r poly.plot2, fig.align="center", fig.cap="Here is a 4th order polynomial.", echo=FALSE}
+tt <- seq(-5,5,.01)
+plot(tt^4+2*tt^3-12*tt^2-2*tt+6,ylim=c(-100,100),type="l",ylab="",xlab="")
+```
+
