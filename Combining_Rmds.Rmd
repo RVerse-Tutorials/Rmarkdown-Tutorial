@@ -1,0 +1,24 @@
+---
+title: "Combining"
+author: "EE Holmes"
+date: "6/12/2020"
+output: html_document
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+
+Here is the intro.
+
+## Tables
+
+```{r child="Tables.Rmd"}
+```
+
+## Figures
+
+```{r child="Figures.Rmd"}
+```
