@@ -1,7 +1,7 @@
 ---
 title: "Tables"
 author: "EE Holmes"
-date: "9/5/2018"
+date: "6/12/20202"
 output:
   html_document: default
   pdf_document: default
@@ -51,4 +51,5 @@ You can also make tables in raw markdown but you are limited in what you can ach
 | col 1 is |  left-aligned | $1600 |
 | col 2 is |    centered   |   $12 |
 | col 3 is | right-aligned |    $1 |
+
 

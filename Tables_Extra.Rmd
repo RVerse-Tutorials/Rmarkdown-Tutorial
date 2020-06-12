@@ -1,0 +1,72 @@
+---
+title: "Tables"
+author: "EE Holmes"
+date: "6/12/20202"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+always_allow_html: yes
+---
+
+This is a more complex example of making tables.
+
+```{r setup, warning=FALSE}
+library(knitr)
+library(kableExtra)
+library(xtable)
+output.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
+output.type
+```
+
+Here I'll use a data from from a R data set, but in practice your data frame would come from a function.
+
+```{r}
+a <- mtcars[1:7, 1:6]
+```
+
+Default **kable** table.
+
+```{r}
+knitr::kable(a)
+```
+
+This is the table with **xtable** for LaTeX and **kableExtra** for html.
+
+```{r, results='asis', echo=FALSE}
+caption="My table caption"
+#Dynamically add stuff to caption
+caption <- paste(caption, Sys.Date())
+# set up latex alignment
+aln <- paste0("rr|c|", paste(rep("c", ncol(a)-2), collapse=""))
+if(output.type=="latex"){
+  # Google table placement latex to learn the placement options
+  print(xtable::xtable(a, align=aln, digits=0, caption=caption), 
+      comment=FALSE, include.rownames=FALSE,
+      caption.placement="top", table.placement="h", type=output.type)
+  
+  # Landscape for wide tables. You need table.placement="p" here because you need a new page.
+  cat("\\begin{landscape}")
+  print(xtable::xtable(a, align=aln, digits=0, caption=caption), 
+      comment=FALSE, include.rownames=FALSE,
+      caption.placement="top", table.placement="p", type=output.type)
+  cat("\\end{landscape}")
+  
+  # If you just want the tex file
+    print(xtable::xtable(a, align=aln, digits=0, caption=caption), 
+      comment=FALSE, include.rownames=FALSE,
+      caption.placement="top", table.placement="p", type=output.type, file="table.tex")
+  }
+if(output.type=="html"){
+  cat("\n## The table heading\n\n")
+  cat(caption)
+  knitr::kable(a) %>% 
+    kableExtra::kable_styling(full_width = FALSE)
+}
+if(output.type=="word"){
+  cat("\n## The table heading\n\n")
+  cat(caption)
+  knitr::kable(a)
+}
+```
+
