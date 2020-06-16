@@ -1,0 +1,42 @@
+---
+title: "Tables using Children and Table Functions"
+author: "EE Holmes"
+date: "6/15/20202"
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+always_allow_html: yes
+---
+
+```{r include=FALSE}
+# include = FALSE means don't show code or any output (like warnings)
+# It is good to set up any knitr options that you want at the top of all your Rmds
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
+```
+
+This is an example of a Tables Rmd with separate Rmds for the individual tables. `Table1` is a simple table. `Table_Counts` is a table function that is then called to make 5 tables with the same format but different input data. For this example, I am only going to use `kable()` for all output types. See `Tables.Rmd` for examples of using the **kableExtra*` and** and **xtable** packages. 
+
+The example in Table_Counts.Rmd shows you how to include a page break in your Word doc between tables. Also note that I use `format="pandoc"` for the table. That works for Word in my experience.
+
+Also note, best not to use chunk labels in the your Rmd children. It's too easy to get duplicate labels accidentally.
+
+**Make sure these files are in your working directory. You may need to set the working directory to Report_with_Tables.**
+
+
+```{r child="Table1.Rmd"}
+```
+
+```{r child="Table_Counts.Rmd"}
+```
+
+<!-- This is how to get a new page in Word. Make sure you are in print view on the word doc -->
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
+```{r child="Table1.Rmd"}
+```
+
+

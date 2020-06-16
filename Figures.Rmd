@@ -7,7 +7,11 @@ output:
     fig_caption: yes
 ---
 
-
+```{r include=FALSE}
+# include = FALSE means don't show code or any output (like warnings)
+# It is good to set up any knitr options that you want at the top of all your Rmds
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ```{r load_data, echo=FALSE}
 load("landings.RData")
