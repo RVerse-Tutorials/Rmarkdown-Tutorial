@@ -19,7 +19,9 @@ output.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
 output.type
 ```
 
-Here I'll use a data from from a R data set, but in practice your data frame would come from a function.
+Here I'll use a data frame from from a R data set, but in practice your data frame would come from a function.
+
+Note the first time you make a PDF, tinytex will load any needed packages and it can take a **long** time. You'll see a spinning wheel on the R Markdown tab.
 
 ```{r}
 a <- mtcars[1:7, 1:6]
