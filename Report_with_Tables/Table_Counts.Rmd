@@ -1,0 +1,68 @@
+---
+title: "Table of Population Counts"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+---
+
+```{r include=FALSE}
+# Since the master had this, I don't need to repeat it. But I do so that I can
+# run this Rmd independently during debugging and development
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
+library(knitr)
+# need this for %>% function
+library(kableExtra)
+```
+
+```{r}
+fixcols <- function(x){
+  # fix _ and . in colname and make title format
+  x <- stringr::str_replace_all(x, "_", " ")
+  x <- stringr::str_replace_all(x, "[,]", " ")
+  x <- stringr::str_to_title(x)
+  x[x=="Esu"] <- "ESU"
+  x[x=="Number Of Spawners"] <- "Spawners"
+  x
+}
+```
+
+<!-- This is how to get a new page in Word. Make sure you are in print view on the word doc -->
+
+```{r}
+wordnewpage <-
+'```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```'
+```
+
+```{r}
+counts <- read.csv("Lower_Columbia_River_Chinook.csv", stringsAsFactors=FALSE)
+colnames(counts) <- fixcols(colnames(counts))
+```
+
+```{r}
+# Create my table function; set default cols but different cols can be passed in
+tablecount <- function(data, cols="Spawners", caption=""){
+  dt <- data[, c("Year", cols)]
+  algn <- paste0("l", paste(rep("c", ncol(dt)-1), collapse=""))
+  cap <- paste0(caption, "Yearly counts of ", paste(cols, collapse=" and "), " for ", min(dt$Year), " to ", max(dt$Year))
+  tab <- kable(dt, align=algn, caption=cap, digits=0, row.names=FALSE, format="pandoc")
+  tab
+}
+```
+
+```{r results='asis'}
+tbl <- 2
+col <- c("Spawners", "Fracwild")
+for(i in unique(counts$`Common Population Name`)[1:2]){
+  dat <- subset(counts, `Common Population Name`==i & Year %in% 2000:2014)
+  cap <- paste0("Table ", tbl, ". ", i, ". ")
+  tab <- tablecount(dat, cols=col, caption=cap)
+  cat("\n", wordnewpage, "\n")
+  print(tab)
+  tbl <- tbl + 1
+}
+```
+
+
