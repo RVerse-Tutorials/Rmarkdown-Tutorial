@@ -2,7 +2,10 @@
 title: "Math"
 author: "EE Holmes"
 date: "9/5/2018"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
