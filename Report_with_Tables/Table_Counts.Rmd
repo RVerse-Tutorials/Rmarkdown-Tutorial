@@ -7,7 +7,7 @@ output:
 ---
 
 ```{r include=FALSE}
-# Since the master had this, I don't need to repeat it. But I do so that I can
+# Since the main Rmd had this, I don't need to repeat it. But I do so that I can
 # run this Rmd independently during debugging and development
 knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
 library(knitr)
@@ -55,7 +55,7 @@ tablecount <- function(data, cols="Spawners", caption=""){
 ```{r results='asis'}
 tbl <- 2
 col <- c("Spawners", "Fracwild")
-for(i in unique(counts$`Common Population Name`)[1:2]){
+for(i in unique(counts$`Common Population Name`)[1:4]){
   dat <- subset(counts, `Common Population Name`==i & Year %in% 2000:2014)
   cap <- paste0("Table ", tbl, ". ", i, ". ")
   tab <- tablecount(dat, cols=col, caption=cap)

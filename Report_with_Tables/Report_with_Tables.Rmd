@@ -1,11 +1,10 @@
 ---
 title: "Tables using Children and Table Functions"
 author: "EE Holmes"
-date: "6/15/20202"
 output:
-  pdf_document: default
   word_document: default
   html_document: default
+  pdf_document: default
 always_allow_html: yes
 ---
 

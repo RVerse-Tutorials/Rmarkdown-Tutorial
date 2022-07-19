@@ -1,0 +1,59 @@
+---
+title: "Figures in for loop"
+author: "EE Holmes"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+# Figures in a for loop
+
+With base R plots, you can just put them in a for loop.
+
+```{r}
+library(ggplot2)
+for( i in 1:2 ) {
+  df <- data.frame(t=1:100, y=rnorm(100))
+  plot(df$t, df$y)
+  cat('\n\n')
+  }
+```
+
+With **ggplot2** you need to assign to an object and print that.
+
+```{r}
+library(ggplot2)
+for( i in 1:2 ) {
+  df <- data.frame(t=1:100, y=rnorm(100))
+  p <- ggplot(df, aes(t, y)) + geom_point()
+  print(p)
+  cat('\n\n')
+  }
+```
+
+To have figure captions that change, you need to create all your figure captions and give that to `fig.cap` as a vector.
+
+
+```{r fig.cap = paste("Figure", 1:2)}
+library(ggplot2)
+for( i in 1:2 ) {
+  df <- data.frame(t=1:100, y=rnorm(100))
+  p <- ggplot(df, aes(t, y)) + geom_point()
+  print(p)
+  cat('\n\n')
+  }
+```
+
+You can have figures appear side by side, though using figure captions will break this. You can `cat()` out a legend but you'll need to set `results='asis'`.
+
+```{r echo=FALSE, fig.hold=TRUE, out.width="50%", results='asis'}
+library(ggplot2)
+for( i in 1:2 ) {
+  df <- data.frame(t=1:100, y=rnorm(100))
+  plot(df$t, df$y)
+  p <- ggplot(df, aes(t, y)) + geom_point()
+  print(p)
+  cat(paste("Figure", i, "\n\n"))
+  }
+```

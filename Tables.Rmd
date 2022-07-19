@@ -1,10 +1,9 @@
 ---
 title: "Tables"
 author: "EE Holmes"
-date: "6/12/20202"
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document: default
 always_allow_html: yes
 ---

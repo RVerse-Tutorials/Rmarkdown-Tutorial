@@ -1,7 +1,6 @@
 ---
 title: "Combining"
 author: "EE Holmes"
-date: "6/12/2020"
 output: html_document
 ---
 

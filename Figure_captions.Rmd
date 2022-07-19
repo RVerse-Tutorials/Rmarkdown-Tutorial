@@ -1,0 +1,21 @@
+---
+title: "Figure captions"
+author: "EE Holmes"
+output:
+  html_document:
+    fig_caption: yes
+---
+
+```{r fig.33, figures-side, fig.show="hold", out.width="50%", echo=FALSE, results='hide',warning=FALSE, fig.width=7.5, fig.height=7.5, dpi=300, fig.cap=figlabel}
+make_label <- function(fignum, sp){
+  sprintf("\\label{fig/fig.%s}Figure %s. %s sampling summaries for size distribution, monthly sample collection, GSI and fish length, and spawning season. Females are red (circles), males are blue (circles), unknown sex is blank (circles).", fignum, fignum, sp)
+}
+figlabel <- make_label(33, "I. imaginariatus")
+plot(mtcars)
+```
+
+```{r fig.34, figures-side, fig.show="hold", out.width="50%", echo=FALSE, results='hide',warning=FALSE, fig.width=7.5, fig.height=7.5, dpi=300, fig.cap=figlabel}
+
+figlabel <- make_label(34, "Z. cornutus")
+plot(mtcars)
+```

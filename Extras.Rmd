@@ -1,7 +1,6 @@
 ---
 title: "Extras"
 author: "EE Holmes"
-date: "9/5/2018"
 output:
   html_document:
     toc: true

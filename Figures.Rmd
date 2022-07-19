@@ -1,7 +1,6 @@
 ---
 title: "Figures"
 author: "EE Holmes"
-date: "9/5/2018"
 output:
   html_document:
     fig_caption: yes
