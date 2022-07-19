@@ -7,8 +7,6 @@ output:
 ---
 
 
-# Figures in a for loop
-
 With base R plots, you can just put them in a for loop.
 
 ```{r}

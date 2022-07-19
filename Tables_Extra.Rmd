@@ -61,9 +61,7 @@ if(output.type=="latex"){
       caption.placement="top", table.placement="p", type=output.type, file="table.tex")
   }
 if(output.type=="html"){
-  cat("\n## The table heading\n\n")
-  cat(caption)
-  knitr::kable(a) %>% 
+  knitr::kable(a, caption = caption) %>% 
     kableExtra::kable_styling(full_width = FALSE)
 }
 if(output.type=="word"){

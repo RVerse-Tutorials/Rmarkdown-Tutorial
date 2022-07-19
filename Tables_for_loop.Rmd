@@ -1,0 +1,21 @@
+---
+title: "Tables in for loop"
+author: "EE Holmes"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+Sometimes you need to make the same table over and over with different data. Note the trick with outputting `kabel` output to an object `tab` and then printing that in a `for` loop. Also note `results='asis'`.
+
+```{r results='asis'}
+library(knitr)
+spp <- unique(iris$Species)
+tblnum <- length(spp)
+for(tbl in 1:tblnum){
+  cap <- paste0("Table ", tbl, ". ", spp[tbl])
+  tab <- kable(subset(iris, Species==spp[tbl])[1:4,], caption = cap)
+  print(tab)
+}
+```
